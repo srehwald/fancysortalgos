@@ -1,6 +1,7 @@
 import React from "react";
 import { Chart } from "chart.js";
 import * as _ from "lodash";
+import { Algorithm, BubbleSort } from "../models";
 
 interface IDiagramProps {
     size: number;
@@ -13,9 +14,11 @@ interface IDiagramState {
 
 export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
     private _chartRef: any = React.createRef();
+    private _algorithms: Algorithm[];
 
     constructor(props: IDiagramProps) {
         super(props);
+        this._algorithms = [new BubbleSort()];
 
         // TODO shuffle again if already ordered
         this.state = { data: _.shuffle(_.range(1, this.props.size + 1)), chart: undefined};
@@ -64,6 +67,13 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
 
     }
 
+    update(data: number[]) {
+        this.state.chart!.data.datasets![0].data = data;
+        this.state.chart!.data.labels = data.map(x => x.toString());
+        this.state.chart!.update();
+        this.forceUpdate();
+    }
+
     render() {
         return (
             <div>
@@ -71,6 +81,11 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                 <button onClick={() => this.shuffle()}>
                     Shuffle
                 </button>
+                {/*TODO let user choose algorithm*/}
+                <select>
+                    <option>TODO</option>
+                </select>
+                <button onClick={() => this._algorithms[0].sort(this.state.chart!.data.datasets![0].data as number[], (data) => this.update(data))}>Sort</button>
             </div>
         );
     }

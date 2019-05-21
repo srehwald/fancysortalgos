@@ -9,6 +9,6 @@ const App: React.FC = () => {
       <Diagram size={100}/>
     </div>
   );
-}
+};
 
 export default App;
