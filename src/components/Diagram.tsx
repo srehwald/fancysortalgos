@@ -52,6 +52,12 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                 },
                 animation: {
                     duration: 100
+                },
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    enabled: false
                 }
             }
         });
