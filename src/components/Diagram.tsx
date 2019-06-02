@@ -11,6 +11,8 @@ interface IDiagramState {
     data: number[];
     chart: Chart | undefined;
     algorithm: Algorithm;
+
+    isSorting: boolean;
 }
 
 export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
@@ -23,7 +25,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
 
         // TODO shuffle again if already ordered
         this.state = { data: _.shuffle(_.range(1, this.props.size + 1)), chart: undefined,
-            algorithm: this._algorithms[0]};
+            algorithm: this._algorithms[0], isSorting: false};
     }
 
     componentDidMount() {
@@ -86,9 +88,17 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
     }
 
     sort() {
-        // sort the chart data using the currently selected algorithm
-        this.state.algorithm.sort(this.state.chart!.data.datasets![0].data as number[],
-            (data) => this.update(data));
+        this.setState({isSorting: true},
+            () => {
+                // sort the chart data using the currently selected algorithm
+                this.state.algorithm.sort(this.state.chart!.data.datasets![0].data as number[],
+                    (data) => this.update(data))
+                    .then(() => {
+                        this.setState({isSorting: false});
+                    }, () => {
+                        this.setState({isSorting: false});
+                    });
+            });
     }
 
     update(data: number[]) {
@@ -103,15 +113,15 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
         return (
             <div>
                 <canvas ref={this._chartRef} />
-                <button onClick={() => this.shuffle()}>
+                <button onClick={() => this.shuffle()} disabled={this.state.isSorting}>
                     Shuffle
                 </button>
-                <select onChange={(event: any) => this.selectAlgorithm(event)}>
+                <select onChange={(event: any) => this.selectAlgorithm(event)} disabled={this.state.isSorting}>
                     {/* the value property of each option is set to the index of the algorithm in the array */}
                     {this._algorithms.map((val, index) =>
                         <option value={index}>{val.constructor.name}</option>)}
                 </select>
-                <button onClick={() => this.sort()}>Sort</button>
+                <button onClick={() => this.sort()} disabled={this.state.isSorting}>Sort</button>
             </div>
         );
     }
