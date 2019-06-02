@@ -71,6 +71,15 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
 
     }
 
+    selectAlgorithm(event: any) {
+        this.setState({algorithm: this._algorithms[event.target.value]});
+    }
+
+    sort() {
+        this.state.algorithm.sort(this.state.chart!.data.datasets![0].data as number[],
+            (data) => this.update(data));
+    }
+
     update(data: number[]) {
         this.state.chart!.data.datasets![0].data = data;
         this.state.chart!.data.labels = data.map(x => x.toString());
@@ -85,10 +94,10 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                 <button onClick={() => this.shuffle()}>
                     Shuffle
                 </button>
-                <select onChange={(event: any) => this.setState({algorithm: this._algorithms[event.target.value]})}>
+                <select onChange={(event: any) => this.selectAlgorithm(event)}>
                     {this._algorithms.map((val, index) => <option value={index}>{val.constructor.name}</option>)}
                 </select>
-                <button onClick={() => this.state.algorithm.sort(this.state.chart!.data.datasets![0].data as number[], (data) => this.update(data))}>Sort</button>
+                <button onClick={() => this.sort()}>Sort</button>
             </div>
         );
     }
