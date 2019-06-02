@@ -22,7 +22,8 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
         this._algorithms = [new Mergesort(), new BubbleSort()];
 
         // TODO shuffle again if already ordered
-        this.state = { data: _.shuffle(_.range(1, this.props.size + 1)), chart: undefined, algorithm: this._algorithms[0]};
+        this.state = { data: _.shuffle(_.range(1, this.props.size + 1)), chart: undefined,
+            algorithm: this._algorithms[0]};
     }
 
     componentDidMount() {
@@ -95,7 +96,8 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                     Shuffle
                 </button>
                 <select onChange={(event: any) => this.selectAlgorithm(event)}>
-                    {this._algorithms.map((val, index) => <option value={index}>{val.constructor.name}</option>)}
+                    {this._algorithms.map((val, index) =>
+                        <option value={index}>{val.constructor.name}</option>)}
                 </select>
                 <button onClick={() => this.sort()}>Sort</button>
             </div>
