@@ -2,6 +2,8 @@ import React from "react";
 import { Chart } from "chart.js";
 import * as _ from "lodash";
 import { Algorithm, BubbleSort, Mergesort } from "../models";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCogs, faRandom, faSortAmountUp } from "@fortawesome/free-solid-svg-icons";
 
 interface IDiagramProps {
     size: number;
@@ -113,15 +115,30 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
         return (
             <div>
                 <canvas ref={this._chartRef} />
-                <button onClick={() => this.shuffle()} disabled={this.state.isSorting}>
-                    Shuffle
-                </button>
-                <select onChange={(event: any) => this.selectAlgorithm(event)} disabled={this.state.isSorting}>
-                    {/* the value property of each option is set to the index of the algorithm in the array */}
-                    {this._algorithms.map((val, index) =>
-                        <option value={index}>{val.constructor.name}</option>)}
-                </select>
-                <button onClick={() => this.sort()} disabled={this.state.isSorting}>Sort</button>
+                <div className="field has-addons has-addons-centered">
+                    <div className="control has-icons-left">
+                        <div className="select">
+                            <select onChange={(event: any) => this.selectAlgorithm(event)} disabled={this.state.isSorting}>
+                                {/* the value property of each option is set to the index of the algorithm in the array */}
+                                {this._algorithms.map((val, index) =>
+                                    <option key={index} value={index}>{val.constructor.name}</option>)}
+                            </select>
+                            <span className="icon is-left">
+                                <FontAwesomeIcon icon={faCogs} />
+                            </span>
+                        </div>
+                    </div>
+                    <div className="control">
+                        <button className="button" onClick={() => this.sort()} disabled={this.state.isSorting}>
+                            <FontAwesomeIcon icon={faSortAmountUp} />&nbsp;Sort
+                        </button>
+                    </div>
+                    <div className="control">
+                        <button className="button" onClick={() => this.shuffle()} disabled={this.state.isSorting}>
+                            <FontAwesomeIcon icon={faRandom} />&nbsp;Shuffle
+                        </button>
+                    </div>
+                </div>
             </div>
         );
     }
