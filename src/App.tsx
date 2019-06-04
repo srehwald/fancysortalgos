@@ -4,7 +4,7 @@ import { Diagram } from "./components/";
 
 const App: React.FC = () => {
   return (
-      <div>
+      <div className="container">
           <nav className="navbar" role="navigation">
               <div className="navbar-brand">
                   <a className="navbar-item">
