@@ -1,7 +1,7 @@
 import React from "react";
 import { Chart } from "chart.js";
 import * as _ from "lodash";
-import { Algorithm, BubbleSort, Mergesort, Bogosort } from "../models";
+import { Algorithm, BubbleSort, Mergesort, Bogosort, Insertionsort } from "../models";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCogs, faRandom, faSortAmountUp } from "@fortawesome/free-solid-svg-icons";
 
@@ -23,7 +23,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
 
     constructor(props: IDiagramProps) {
         super(props);
-        this._algorithms = [new Mergesort(), new BubbleSort(), new Bogosort()];
+        this._algorithms = [new Mergesort(), new BubbleSort(), new Insertionsort(), new Bogosort()];
 
         // TODO shuffle again if already ordered
         this.state = { data: _.shuffle(_.range(1, this.props.size + 1)), chart: undefined,
