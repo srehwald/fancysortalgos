@@ -13,7 +13,7 @@ export class Footer extends React.Component {
                 </div>
                 <div>
                     using <FontAwesomeIcon icon={faReact} />&nbsp;
-                    <a href="https://reactjs.org">React</a> and <a href="https://bulma.io">Bulma</a>
+                    <a href="https://reactjs.org">React</a>, <a href="https://bulma.io">Bulma</a> and <a href="https://www.chartjs.org">Chart.js</a>
                 </div>
             </div>
         )
