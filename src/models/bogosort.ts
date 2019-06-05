@@ -2,7 +2,7 @@ import { Algorithm } from "./algorithm";
 import * as _ from "lodash";
 
 export class Bogosort extends Algorithm {
-    async sort(data: number[], callback: (data: number[]) => void): Promise<any> {
+    async sort(data: number[], callback: (data: number[]) => void): Promise<void> {
         while (!Bogosort.isSorted(data)) {
             // shuffle data as long it is not sorted
             data = _.shuffle(data);

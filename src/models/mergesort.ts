@@ -2,17 +2,13 @@ import { Algorithm } from "./algorithm";
 
 export class Mergesort extends Algorithm {
 
-    // TODO fix
-    // @ts-ignore
-    async sort(data: number[], callback: (data: number[]) => void): any {
+    async sort(data: number[], callback: (data: number[]) => void): Promise<void> {
         let items = data.map((d, i) => new Item(d, i));
         await this.mergeSort(items, data, callback);
     }
 
     // https://hackernoon.com/programming-with-js-merge-sort-deb677b777c0
-    // TODO fix
-    // @ts-ignore
-    async mergeSort(items: Item[], original: number[], callback: (data: number[]) => void): any {
+    async mergeSort(items: Item[], original: number[], callback: (data: number[]) => void): Promise<Item[]> {
         if (items.length == 1) {
             return items;
         }
