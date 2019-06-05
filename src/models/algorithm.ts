@@ -1,5 +1,5 @@
 export abstract class Algorithm {
-    public abstract sort(data: number[], callback: (data: number[]) => void): any;
+    public abstract async sort(data: number[], callback: (data: number[]) => void): Promise<any>;
 
     static sleep(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
