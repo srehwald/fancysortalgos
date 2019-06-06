@@ -1,6 +1,9 @@
 import { Algorithm } from "./algorithm";
 
-export class Mergesort extends Algorithm {
+export class MergeSort extends Algorithm {
+    constructor() {
+        super("MergeSort");
+    }
 
     async sort(data: number[], callback: (data: number[]) => void): Promise<void> {
         let items = data.map((d, i) => new Item(d, i));

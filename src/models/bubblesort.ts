@@ -1,6 +1,10 @@
 import { Algorithm } from "./algorithm";
 
 export class BubbleSort extends Algorithm {
+    constructor() {
+        super("BubbleSort");
+    }
+
     async sort(data: number[], callback: (data: number[]) => void): Promise<void> {
         for (let n = data.length; n > 1; --n) {
             for (let i = 0; i < n - 1; ++i) {

@@ -1,6 +1,10 @@
 import { Algorithm } from "./algorithm";
 
-export class Insertionsort extends Algorithm {
+export class InsertionSort extends Algorithm {
+    constructor() {
+        super("InsertionSort");
+    }
+
     async sort(data: number[], callback: (data: number[]) => void): Promise<void> {
         for (let i = 0; i < data.length; i++) {
             if (i > 0) {

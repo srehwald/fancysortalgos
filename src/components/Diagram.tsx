@@ -1,7 +1,7 @@
 import React from "react";
 import { Chart } from "chart.js";
 import * as _ from "lodash";
-import { Algorithm, BubbleSort, Mergesort, Bogosort, Insertionsort } from "../models";
+import { Algorithm, BubbleSort, MergeSort, Bogosort, InsertionSort } from "../models";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCogs, faRandom, faSortAmountUp } from "@fortawesome/free-solid-svg-icons";
 
@@ -23,7 +23,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
 
     constructor(props: IDiagramProps) {
         super(props);
-        this._algorithms = [new Mergesort(), new BubbleSort(), new Insertionsort(), new Bogosort()];
+        this._algorithms = [new MergeSort(), new BubbleSort(), new InsertionSort(), new Bogosort()];
 
         // TODO shuffle again if already ordered
         this.state = { data: _.shuffle(_.range(1, this.props.size + 1)), chart: undefined,
@@ -120,8 +120,8 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                         <div className="select">
                             <select onChange={(event: any) => this.selectAlgorithm(event)} disabled={this.state.isSorting}>
                                 {/* the value property of each option is set to the index of the algorithm in the array */}
-                                {this._algorithms.map((val, index) =>
-                                    <option key={index} value={index}>{val.constructor.name}</option>)}
+                                {this._algorithms.map((val: Algorithm, index: number) =>
+                                    <option key={index} value={index}>{val.name}</option>)}
                             </select>
                             <span className="icon is-left">
                                 <FontAwesomeIcon icon={faCogs} />
