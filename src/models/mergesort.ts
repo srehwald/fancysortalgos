@@ -9,7 +9,7 @@ export class Mergesort extends Algorithm {
 
     // https://hackernoon.com/programming-with-js-merge-sort-deb677b777c0
     async mergeSort(items: Item[], original: number[], callback: (data: number[]) => void): Promise<Item[]> {
-        if (items.length == 1) {
+        if (items.length === 1) {
             return items;
         }
 
@@ -33,6 +33,8 @@ export class Mergesort extends Algorithm {
                 original.splice(left[indexLeft].index, 0, original.splice(right[indexRight].index, 1)[0]);
                 right[indexRight].index = left[indexLeft].index;
 
+                // TODO fix no-loop-func
+                // eslint-disable-next-line
                 left = left.map((item, i) => {
                     if (i >= indexLeft) {
                        item.index += 1;
