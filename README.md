@@ -1,5 +1,7 @@
 # Fancy Sort Algos
 
+[![Build Status](https://travis-ci.com/srehwald/fancysortalgos.svg?branch=master)](https://travis-ci.com/srehwald/fancysortalgos)
+
 Just a React app visualizing different sort algorithms.
 
 ## Story Time
