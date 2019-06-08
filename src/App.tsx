@@ -7,7 +7,7 @@ const App: React.FC = () => {
       <div className="container">
           <nav className="navbar" role="navigation">
               <div className="navbar-brand">
-                  <a href="/" className="navbar-item">
+                  <a href={process.env.PUBLIC_URL + "/"} className="navbar-item">
                       Fancy Sort Algos
                   </a>
               </div>
