@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/fancysortalgos/static/css/main.d7ab6fa1.chunk.css",
+    "main.js": "/fancysortalgos/static/js/main.9dbdba80.chunk.js",
+    "main.js.map": "/fancysortalgos/static/js/main.9dbdba80.chunk.js.map",
+    "runtime~main.js": "/fancysortalgos/static/js/runtime~main.685ab1e9.js",
+    "runtime~main.js.map": "/fancysortalgos/static/js/runtime~main.685ab1e9.js.map",
+    "static/js/2.4addf1ba.chunk.js": "/fancysortalgos/static/js/2.4addf1ba.chunk.js",
+    "static/js/2.4addf1ba.chunk.js.map": "/fancysortalgos/static/js/2.4addf1ba.chunk.js.map",
+    "index.html": "/fancysortalgos/index.html",
+    "precache-manifest.8fafa27bb67d4cbf0a5115d47f17a257.js": "/fancysortalgos/precache-manifest.8fafa27bb67d4cbf0a5115d47f17a257.js",
+    "service-worker.js": "/fancysortalgos/service-worker.js",
+    "static/css/main.d7ab6fa1.chunk.css.map": "/fancysortalgos/static/css/main.d7ab6fa1.chunk.css.map"
+  }
+}
