@@ -5,11 +5,7 @@ export abstract class Algorithm {
         this._name = name;
     }
 
-    public abstract async sort(data: number[], callback: (data: number[]) => void): Promise<any>;
-
-    static sleep(ms: number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+    public abstract sort(data: number[]): number[][];
 
     get name(): string {
         return this._name;

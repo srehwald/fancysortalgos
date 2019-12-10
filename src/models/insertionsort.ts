@@ -1,11 +1,14 @@
 import { Algorithm } from "./algorithm";
+import * as _ from "lodash";
 
-export class InsertionSort extends Algorithm {
+export class InsertionSort extends Algorithm{
     constructor() {
         super("InsertionSort");
     }
 
-    async sort(data: number[], callback: (data: number[]) => void): Promise<void> {
+    sort(data: number[]): number[][] {
+        const steps: number[][] = [];
+
         for (let i = 0; i < data.length; i++) {
             if (i > 0) {
                 for (let k = i; k >= 0; k--) {
@@ -15,13 +18,13 @@ export class InsertionSort extends Algorithm {
                         data[k - 1] = data[k];
                         data[k] = temp;
 
-                        // update diagram
-                        callback(data);
-                        await Algorithm.sleep(5);
+                        steps.push(_.clone(data));
                     }
                 }
             }
         }
+
+        return steps;
     }
 
 }

@@ -1,11 +1,14 @@
 import { Algorithm } from "./algorithm";
+import * as _ from "lodash";
 
 export class BubbleSort extends Algorithm {
     constructor() {
         super("BubbleSort");
     }
 
-    async sort(data: number[], callback: (data: number[]) => void): Promise<void> {
+    sort(data: number[]): number[][] {
+        const steps: number[][] = [];
+
         for (let n = data.length; n > 1; --n) {
             for (let i = 0; i < n - 1; ++i) {
                 if (data[i] > data[i + 1]) {
@@ -14,11 +17,12 @@ export class BubbleSort extends Algorithm {
                     data[i + 1] = data[i];
                     data[i] = temp;
 
-                    // update diagram
-                    callback(data);
-                    await Algorithm.sleep(5);
+                    steps.push(_.clone(data));
                 }
             }
         }
+
+        return steps;
+
     }
 }

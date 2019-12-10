@@ -1,17 +1,21 @@
 import { Algorithm } from "./algorithm";
+import * as _ from "lodash";
 
-export class MergeSort extends Algorithm {
+export class MergeSort extends Algorithm{
     constructor() {
         super("MergeSort");
     }
 
-    async sort(data: number[], callback: (data: number[]) => void): Promise<void> {
+    sort(data: number[]): number[][] {
         let items = data.map((d, i) => new Item(d, i));
-        await this.mergeSort(items, data, callback);
+        const steps: number[][] = [];
+
+        this.mergeSort(items, data, steps);
+        return steps;
     }
 
     // https://hackernoon.com/programming-with-js-merge-sort-deb677b777c0
-    async mergeSort(items: Item[], original: number[], callback: (data: number[]) => void): Promise<Item[]> {
+    mergeSort(items: Item[], original: number[], steps: number[][]): Item[] {
         if (items.length === 1) {
             return items;
         }
@@ -19,10 +23,10 @@ export class MergeSort extends Algorithm {
         let middle = Math.floor(items.length / 2);
         let left = items.slice(0, middle);
         let right = items.slice(middle);
-        return await this.merge(await this.mergeSort(left, original, callback), await this.mergeSort(right, original, callback), original, callback);
+        return this.merge(this.mergeSort(left, original, steps), this.mergeSort(right, original, steps), original, steps);
     }
 
-    async merge(left: Item[], right: Item[], original: number[], callback: (data: number[]) => void) {
+    merge(left: Item[], right: Item[], original: number[], steps: number[][]) {
         const result = [];
         let indexLeft = 0;
         let indexRight = 0;
@@ -44,8 +48,8 @@ export class MergeSort extends Algorithm {
                    }
                     return item;
                 });
-                await Algorithm.sleep(10);
-                callback(original);
+                
+                steps.push(_.clone(original));
 
                 result.push(right[indexRight]);
                 indexRight++;

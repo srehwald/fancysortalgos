@@ -1,7 +1,7 @@
 import React from "react";
 import { Chart } from "chart.js";
 import * as _ from "lodash";
-import { Algorithm, BubbleSort, MergeSort, Bogosort, InsertionSort } from "../models";
+import { Algorithm, BubbleSort, MergeSort, Bogosort, InsertionSort, Util } from "../models";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCogs, faRandom, faSortAmountUp } from "@fortawesome/free-solid-svg-icons";
 
@@ -55,7 +55,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                     ]
                 },
                 animation: {
-                    duration: 100
+                    duration: 0
                 },
                 legend: {
                     display: false
@@ -91,15 +91,23 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
 
     sort() {
         this.setState({isSorting: true},
-            () => {
-                // sort the chart data using the currently selected algorithm
-                this.state.algorithm.sort(this.state.chart!.data.datasets![0].data as number[],
-                    (data) => this.update(data))
-                    .then(() => {
-                        this.setState({isSorting: false});
-                    }, () => {
-                        this.setState({isSorting: false});
-                    });
+            async () => {
+                // get sorting steps
+                let steps = this.state.algorithm.sort(this.state.chart!.data.datasets![0].data as number[])
+
+
+                // TODO possibly warning if max integer reached?
+                for (let i = 0; i < Number.MAX_SAFE_INTEGER && i < steps.length; i++) {
+                    const step = steps[i];
+                    this.update(step);
+                    await Util.sleep(10);
+
+                    if (i === steps.length - 1 && !Util.isSorted(step)) {
+                        steps = steps.concat(this.state.algorithm.sort(step));
+                    }
+                }
+
+                this.setState({isSorting: false});
             });
     }
 

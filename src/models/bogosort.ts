@@ -1,20 +1,25 @@
 import { Algorithm } from "./algorithm";
 import * as _ from "lodash";
 
-export class Bogosort extends Algorithm {
+export class Bogosort extends Algorithm{
+    private static readonly MAX_ITERATIONS = 1337;
+
     constructor() {
         super("Bogosort");
     }
 
-    async sort(data: number[], callback: (data: number[]) => void): Promise<void> {
-        while (!Bogosort.isSorted(data)) {
+    sort(data: number[]): number[][]{
+        const steps: number[][] = [];
+        let counter = 0;
+
+        while (!Bogosort.isSorted(data) && counter < Bogosort.MAX_ITERATIONS) {
             // shuffle data as long it is not sorted
             data = _.shuffle(data);
-
-            // update diagram
-            callback(data);
-            await Algorithm.sleep(5);
+            steps.push(_.clone(data));
+            counter++;
         }
+
+        return steps;
     }
 
     private static isSorted(data: number[]): boolean {
