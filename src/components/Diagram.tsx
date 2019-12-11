@@ -206,7 +206,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
     render() {
         return (
             <div>
-                <canvas ref={this._chartRef} />
+                <canvas id="chart" ref={this._chartRef} />
                 <div className="field has-addons has-addons-centered">
                     <div className="control has-icons-left">
                         <div className="select">

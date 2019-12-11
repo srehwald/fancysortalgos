@@ -1,0 +1,4 @@
+#chart {
+    // view height - (navbar + buttons + hint + extra space)
+    max-height: calc(100vh - (52px + 52px + 18px + 12px));
+}
