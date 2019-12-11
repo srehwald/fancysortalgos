@@ -29,8 +29,12 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
         this._algorithms = [new MergeSort(), new BubbleSort(), new InsertionSort(), new Bogosort()];
 
         // TODO shuffle again if already ordered
-        this.state = { data: _.shuffle(_.range(1, this.props.size + 1)), chart: undefined,
-            algorithm: this._algorithms[0], steps: [], index: 0, isPaused: false, isStopped: true};
+        const data = _.shuffle(_.range(1, this.props.size + 1));
+        const algorithm = this._algorithms[0];
+        const steps = algorithm.sort(_.clone(data));
+
+        this.state = { data: data, chart: undefined, algorithm: algorithm,
+            steps: steps, index: 0, isPaused: false, isStopped: true};
     }
 
     componentDidMount() {
@@ -70,9 +74,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
             }
         });
 
-        this.setState(() => ({
-            chart: chart
-        }));
+        this.setState({chart: chart});
     }
 
     componentWillUnmount(){
@@ -80,10 +82,8 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
       }
 
     shuffle() {
-        this.setState((state) => ({
-            // shuffle data
-            data: _.shuffle(state.data)
-        }), () => {
+        this.setState({data: _.shuffle(this.state.data)}, () => {
+            this.startSort();
             // update chart
             this.state.chart!.data.datasets![0].data = this.state.data;
             this.state.chart!.data.labels = this.state.data.map(x => x.toString());
@@ -94,14 +94,15 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
 
     selectAlgorithm(event: any) {
         // update the currently selected algorithm
-        this.setState({algorithm: this._algorithms[event.target.value]}, () => this.stopSort());
+        this.setState({algorithm: this._algorithms[event.target.value]}, () => {
+            this.stopSort();
+            this.startSort();
+        });
     }
 
     startSort() {
-        let steps = this.state.algorithm.sort(this.state.chart!.data.datasets![0].data as number[]);
-        this.setState({steps: steps, index: 0, isStopped: false}, () => {
-            this.continueSort();
-        });
+        let steps = this.state.algorithm.sort(_.clone(this.state.data));
+        this.setState({steps: steps, index: 0});
     }
 
     continueSort() {
@@ -135,7 +136,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                     }
                 }
 
-                this.setState({isPaused: false, isStopped: true});
+                this.setState({index: this.state.steps.length - 1, isPaused: true, isStopped: false});
             });
     }
 
@@ -144,17 +145,21 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
     }
 
     stopSort() {
-        this.setState({isStopped: true, steps: [], index: 0}, () => this.shuffle());
+        this.setState({isStopped: true, index: 0}, () => {
+            this.update(this.state.data);
+        });
     }
 
     nextStep() {
-        // TODO max
-        this.setState({index: this.state.index + 1}, () => this.update(this.state.steps[this.state.index]));
+        if (this.state.index < this.state.steps.length - 1) {
+            this.setState({index: this.state.index + 1},() => this.update(this.state.steps[this.state.index]));
+        }
     }
 
     prevStep() {
-        // TODO min
-        this.setState({index: this.state.index - 1}, () => this.update(this.state.steps[this.state.index]));
+        if (this.state.index > 0) {
+            this.setState({index: this.state.index - 1}, () => this.update(this.state.steps[this.state.index]));
+        }
     }
 
     update(data: number[]) {
@@ -166,7 +171,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
     }
 
     handleArrowKey(event: any) {
-        if (this.state.isPaused) {
+        if (this.state.isPaused || this.state.isStopped) {
             if (event.keyCode === 37) {
                 this.prevStep();
             } else if (event.keyCode === 39) {
@@ -194,20 +199,13 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                     </div>
                     <div className="control">
                         {(() => {
-                            if (this.state.isStopped) {
-                                return (
-                                    <button className="button" onClick={() => this.startSort()}>
-                                        <FontAwesomeIcon icon={faPlay} />
-                                    </button>
-                                );
-                            } else if (this.state.isPaused) {
+                            if (this.state.isPaused || this.state.isStopped) {
                                 return (
                                     <button className="button" onClick={() => this.continueSort()}>
                                         <FontAwesomeIcon icon={faPlay} />
                                     </button>
                                 );
-                            } 
-                            else {
+                            } else {
                                 return (
                                     <button className="button" onClick={() => this.pauseSort()}>
                                         <FontAwesomeIcon icon={faPause} />
@@ -234,12 +232,14 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                         })()}
                     </div>
                     <div className="control">
-                        <button className="button" onClick={() => this.prevStep()} disabled={!this.state.isPaused}>
+                        <button className="button" onClick={() => this.prevStep()}
+                            disabled={!(this.state.isPaused || this.state.isStopped)}>
                             <FontAwesomeIcon icon={faStepBackward} />
                         </button>
                     </div>
                     <div className="control">
-                        <button className="button" onClick={() => this.nextStep()} disabled={!this.state.isPaused}>
+                        <button className="button" onClick={() => this.nextStep()}
+                            disabled={!(this.state.isPaused || this.state.isStopped)}>
                             <FontAwesomeIcon icon={faStepForward} />
                         </button>
                     </div>
