@@ -201,13 +201,13 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                         {(() => {
                             if (this.state.isPaused || this.state.isStopped) {
                                 return (
-                                    <button className="button" onClick={() => this.continueSort()}>
+                                    <button className="button is-success" onClick={() => this.continueSort()}>
                                         <FontAwesomeIcon icon={faPlay} />
                                     </button>
                                 );
                             } else {
                                 return (
-                                    <button className="button" onClick={() => this.pauseSort()}>
+                                    <button className="button is-warning" onClick={() => this.pauseSort()}>
                                         <FontAwesomeIcon icon={faPause} />
                                     </button>
                                 );
@@ -218,13 +218,13 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                         {(() =>{
                             if (this.state.isStopped) {
                                 return (
-                                    <button className="button" onClick={() => this.shuffle()}>
+                                    <button className="button is-info" onClick={() => this.shuffle()}>
                                         <FontAwesomeIcon icon={faRandom} />
                                     </button>
                                 );
                             } else {
                                 return (
-                                    <button className="button" onClick={() => this.stopSort()}>
+                                    <button className="button is-danger" onClick={() => this.stopSort()}>
                                         <FontAwesomeIcon icon={faStop} />
                                     </button>
                                 );
@@ -232,13 +232,13 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                         })()}
                     </div>
                     <div className="control">
-                        <button className="button" onClick={() => this.prevStep()}
+                        <button className="button is-link" onClick={() => this.prevStep()}
                             disabled={!(this.state.isPaused || this.state.isStopped)}>
                             <FontAwesomeIcon icon={faStepBackward} />
                         </button>
                     </div>
                     <div className="control">
-                        <button className="button" onClick={() => this.nextStep()}
+                        <button className="button is-link" onClick={() => this.nextStep()}
                             disabled={!(this.state.isPaused || this.state.isStopped)}>
                             <FontAwesomeIcon icon={faStepForward} />
                         </button>

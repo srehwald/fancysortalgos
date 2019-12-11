@@ -14,7 +14,7 @@
     "@types/node": "12.0.2",
     "@types/react": "16.8.17",
     "@types/react-dom": "16.8.4",
-    "bulma": "^0.7.5",
+    "bulma": "^0.8.0",
     "chart.js": "^2.8.0",
     "chartjs": "^0.3.24",
     "lodash": "^4.17.13",
