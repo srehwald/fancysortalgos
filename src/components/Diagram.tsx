@@ -38,7 +38,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
     }
 
     componentDidMount() {
-        document.addEventListener("keydown", event => this.handleArrowKey(event));
+        document.addEventListener("keydown", event => this.handleKeys(event));
         const chartRef = this._chartRef.current.getContext("2d");
 
         const chart = new Chart(chartRef, {
@@ -78,7 +78,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
     }
 
     componentWillUnmount(){
-        document.removeEventListener("keydown", event => this.handleArrowKey(event));
+        document.removeEventListener("keydown", event => this.handleKeys(event));
       }
 
     shuffle() {
@@ -149,7 +149,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
     }
 
     stopSort() {
-        this.setState({isStopped: true, index: 0}, () => {
+        this.setState({isStopped: true, isPaused: false, index: 0}, () => {
             this.update(this.state.data);
         });
     }
@@ -174,13 +174,32 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
         this.forceUpdate();
     }
 
-    handleArrowKey(event: any) {
+    handleKeys(event: any) {
         if (this.state.isPaused || this.state.isStopped) {
             if (event.keyCode === 37) {
+                // [arrowleft]
                 this.prevStep();
             } else if (event.keyCode === 39) {
+                // [arrowright]
                 this.nextStep();
+            } else if (event.keyCode === 32) {
+                // [spacebar]
+                this.continueSort();
+            } else if (event.keyCode === 8) {
+                if (this.state.isPaused) {
+                    // [backspace] stop if sorting is paused
+                    this.stopSort();
+                } else {
+                    // [backspace] shuffle if sorting is stopped
+                    this.shuffle()
+                }
             }
+        } else if (event.keyCode === 32) {
+            // [spacebar] pause if sort is running
+            this.pauseSort();
+        } else if (event.keyCode === 8) {
+            // [backspace] stop if sort is running
+            this.stopSort();
         }
     }
 
@@ -248,6 +267,9 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                             <FontAwesomeIcon icon={faStepForward} />
                         </button>
                     </div>
+                </div>
+                <div className="is-size-7 has-text-grey">
+                    Hint: You can use your arrow keys to step forward/backwards, your spacebar for play/pause and backspace for stop/shuffle.
                 </div>
                 {/* TODO hint for using arrow keys */}
             </div>
