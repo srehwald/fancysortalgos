@@ -3,7 +3,7 @@ import { Chart } from "chart.js";
 import * as _ from "lodash";
 import { Algorithm, BubbleSort, MergeSort, Bogosort, InsertionSort, Util } from "../models";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCogs, faRandom, faSortAmountUp } from "@fortawesome/free-solid-svg-icons";
+import { faCogs, faRandom, faStop, faStepBackward, faStepForward, faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
 
 interface IDiagramProps {
     size: number;
@@ -14,7 +14,10 @@ interface IDiagramState {
     chart: Chart | undefined;
     algorithm: Algorithm;
 
-    isSorting: boolean;
+    index: number;
+    steps: number[][];
+    isPaused: boolean;
+    isStopped: boolean;
 }
 
 export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
@@ -27,7 +30,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
 
         // TODO shuffle again if already ordered
         this.state = { data: _.shuffle(_.range(1, this.props.size + 1)), chart: undefined,
-            algorithm: this._algorithms[0], isSorting: false};
+            algorithm: this._algorithms[0], steps: [], index: 0, isPaused: false, isStopped: true};
     }
 
     componentDidMount() {
@@ -86,29 +89,65 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
 
     selectAlgorithm(event: any) {
         // update the currently selected algorithm
-        this.setState({algorithm: this._algorithms[event.target.value]});
+        this.setState({algorithm: this._algorithms[event.target.value]}, () => this.stopSort());
     }
 
-    sort() {
-        this.setState({isSorting: true},
+    startSort() {
+        let steps = this.state.algorithm.sort(this.state.chart!.data.datasets![0].data as number[]);
+        this.setState({steps: steps, index: 0, isStopped: false}, () => {
+            this.continueSort();
+        });
+    }
+
+    continueSort() {
+        this.setState({isPaused: false, isStopped: false},
             async () => {
-                // get sorting steps
-                let steps = this.state.algorithm.sort(this.state.chart!.data.datasets![0].data as number[])
-
-
                 // TODO possibly warning if max integer reached?
-                for (let i = 0; i < Number.MAX_SAFE_INTEGER && i < steps.length; i++) {
-                    const step = steps[i];
+                for (let i = this.state.index; i < Number.MAX_SAFE_INTEGER && i < this.state.steps.length; i++) {
+                    if (this.state.isPaused) {
+                        // save current index so that we can step through
+                        this.setState({index: i});
+                        return;
+                    } else if (this.state.isStopped) {
+                        return;
+                    }
+
+                    // get current step
+                    const step = this.state.steps[i];
+                    // update diagram with current data
                     this.update(step);
+                    // delay
                     await Util.sleep(10);
 
-                    if (i === steps.length - 1 && !Util.isSorted(step)) {
-                        steps = steps.concat(this.state.algorithm.sort(step));
+                    if (i === this.state.steps.length - 1 && !Util.isSorted(step)) {
+                        /*
+                        algorithms like Bogosort do not guarantee to sort data. Hence, even after running them for
+                        many iterations, it might be that we still did not reach a sorted state. To make sure that they
+                        can basically run forever, we compute some additional sorting steps.
+                        */
+                        const additionalSteps = this.state.algorithm.sort(step);
+                        return this.setState({steps: this.state.steps.concat(additionalSteps)}, () => this.continueSort());
                     }
                 }
 
-                this.setState({isSorting: false});
+                this.setState({isPaused: false, isStopped: true});
             });
+    }
+
+    pauseSort() {
+        this.setState({isPaused: true});
+    }
+
+    stopSort() {
+        this.setState({isStopped: true, steps: [], index: 0}, () => this.shuffle());
+    }
+
+    nextStep() {
+        this.setState({index: this.state.index + 1}, () => this.update(this.state.steps[this.state.index]));
+    }
+
+    prevStep() {
+        this.setState({index: this.state.index - 1}, () => this.update(this.state.steps[this.state.index]));
     }
 
     update(data: number[]) {
@@ -126,7 +165,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                 <div className="field has-addons has-addons-centered">
                     <div className="control has-icons-left">
                         <div className="select">
-                            <select onChange={(event: any) => this.selectAlgorithm(event)} disabled={this.state.isSorting}>
+                            <select onChange={event => this.selectAlgorithm(event)}>
                                 {/* the value property of each option is set to the index of the algorithm in the array */}
                                 {this._algorithms.map((val: Algorithm, index: number) =>
                                     <option key={index} value={index}>{val.name}</option>)}
@@ -137,13 +176,54 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                         </div>
                     </div>
                     <div className="control">
-                        <button className="button" onClick={() => this.sort()} disabled={this.state.isSorting}>
-                            <FontAwesomeIcon icon={faSortAmountUp} />&nbsp;Sort
+                        {(() => {
+                            if (this.state.isStopped) {
+                                return (
+                                    <button className="button" onClick={() => this.startSort()}>
+                                        <FontAwesomeIcon icon={faPlay} />
+                                    </button>
+                                );
+                            } else if (this.state.isPaused) {
+                                return (
+                                    <button className="button" onClick={() => this.continueSort()}>
+                                        <FontAwesomeIcon icon={faPlay} />
+                                    </button>
+                                );
+                            } 
+                            else {
+                                return (
+                                    <button className="button" onClick={() => this.pauseSort()}>
+                                        <FontAwesomeIcon icon={faPause} />
+                                    </button>
+                                );
+                            }
+                        })()}
+                    </div>
+                    <div className="control">
+                        {(() =>{
+                            if (this.state.isStopped) {
+                                return (
+                                    <button className="button" onClick={() => this.shuffle()}>
+                                        <FontAwesomeIcon icon={faRandom} />
+                                    </button>
+                                );
+                            } else {
+                                return (
+                                    <button className="button" onClick={() => this.stopSort()}>
+                                        <FontAwesomeIcon icon={faStop} />
+                                    </button>
+                                );
+                            }
+                        })()}
+                    </div>
+                    <div className="control">
+                        <button className="button" onClick={() => this.prevStep()} disabled={!this.state.isPaused}>
+                            <FontAwesomeIcon icon={faStepBackward} />
                         </button>
                     </div>
                     <div className="control">
-                        <button className="button" onClick={() => this.shuffle()} disabled={this.state.isSorting}>
-                            <FontAwesomeIcon icon={faRandom} />&nbsp;Shuffle
+                        <button className="button" onClick={() => this.nextStep()} disabled={!this.state.isPaused}>
+                            <FontAwesomeIcon icon={faStepForward} />
                         </button>
                     </div>
                 </div>
