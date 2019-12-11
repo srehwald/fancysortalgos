@@ -106,6 +106,10 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
     }
 
     continueSort() {
+        // do nothing if end of steps is reached
+        if (this.state.index >= this.state.steps.length - 1) {
+            return;
+        }
         this.setState({isPaused: false, isStopped: false},
             async () => {
                 // TODO possibly warning if max integer reached?
@@ -201,7 +205,8 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                         {(() => {
                             if (this.state.isPaused || this.state.isStopped) {
                                 return (
-                                    <button className="button is-success" onClick={() => this.continueSort()}>
+                                    <button className="button is-success" onClick={() => this.continueSort()}
+                                        disabled={this.state.index >= this.state.steps.length - 1}>
                                         <FontAwesomeIcon icon={faPlay} />
                                     </button>
                                 );
