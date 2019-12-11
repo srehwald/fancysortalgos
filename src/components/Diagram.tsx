@@ -34,6 +34,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
     }
 
     componentDidMount() {
+        document.addEventListener("keydown", event => this.handleArrowKey(event));
         const chartRef = this._chartRef.current.getContext("2d");
 
         const chart = new Chart(chartRef, {
@@ -73,6 +74,10 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
             chart: chart
         }));
     }
+
+    componentWillUnmount(){
+        document.removeEventListener("keydown", event => this.handleArrowKey(event));
+      }
 
     shuffle() {
         this.setState((state) => ({
@@ -143,10 +148,12 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
     }
 
     nextStep() {
+        // TODO max
         this.setState({index: this.state.index + 1}, () => this.update(this.state.steps[this.state.index]));
     }
 
     prevStep() {
+        // TODO min
         this.setState({index: this.state.index - 1}, () => this.update(this.state.steps[this.state.index]));
     }
 
@@ -156,6 +163,16 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
         this.state.chart!.data.labels = data.map(x => x.toString());
         this.state.chart!.update();
         this.forceUpdate();
+    }
+
+    handleArrowKey(event: any) {
+        if (this.state.isPaused) {
+            if (event.keyCode === 37) {
+                this.prevStep();
+            } else if (event.keyCode === 39) {
+                this.nextStep();
+            }
+        }
     }
 
     render() {
@@ -227,6 +244,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                         </button>
                     </div>
                 </div>
+                {/* TODO hint for using arrow keys */}
             </div>
         );
     }
