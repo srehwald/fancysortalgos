@@ -184,6 +184,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                 this.nextStep();
             } else if (event.keyCode === 32) {
                 // [spacebar]
+                event.preventDefault(); // prevent scroll
                 this.continueSort();
             } else if (event.keyCode === 8) {
                 if (this.state.isPaused) {
@@ -196,6 +197,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
             }
         } else if (event.keyCode === 32) {
             // [spacebar] pause if sort is running
+            event.preventDefault(); // prevent scroll
             this.pauseSort();
         } else if (event.keyCode === 8) {
             // [backspace] stop if sort is running
