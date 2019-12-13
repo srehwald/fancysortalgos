@@ -1,15 +1,11 @@
 {
   "files": {
-    "main.css": "/fancysortalgos/static/css/main.aafdd804.chunk.css",
+    "main.css": "/fancysortalgos/static/css/main.3bbf0d87.chunk.css",
     "main.js": "/fancysortalgos/static/js/main.f75adffa.chunk.js",
-    "main.js.map": "/fancysortalgos/static/js/main.f75adffa.chunk.js.map",
     "runtime~main.js": "/fancysortalgos/static/js/runtime~main.685ab1e9.js",
-    "runtime~main.js.map": "/fancysortalgos/static/js/runtime~main.685ab1e9.js.map",
     "static/js/2.666b3efe.chunk.js": "/fancysortalgos/static/js/2.666b3efe.chunk.js",
-    "static/js/2.666b3efe.chunk.js.map": "/fancysortalgos/static/js/2.666b3efe.chunk.js.map",
     "index.html": "/fancysortalgos/index.html",
-    "precache-manifest.2b29e592a4a9c140b3cfe515543f8c44.js": "/fancysortalgos/precache-manifest.2b29e592a4a9c140b3cfe515543f8c44.js",
-    "service-worker.js": "/fancysortalgos/service-worker.js",
-    "static/css/main.aafdd804.chunk.css.map": "/fancysortalgos/static/css/main.aafdd804.chunk.css.map"
+    "precache-manifest.048f1d758a3574d4125930a5731bf7b8.js": "/fancysortalgos/precache-manifest.048f1d758a3574d4125930a5731bf7b8.js",
+    "service-worker.js": "/fancysortalgos/service-worker.js"
   }
 }
