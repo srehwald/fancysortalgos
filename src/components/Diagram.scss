@@ -2,3 +2,24 @@
     // view height - (navbar + buttons + hint + extra space)
     max-height: calc(100vh - (52px + 52px + 18px + 12px));
 }
+
+#playback-group {
+    margin-right: 1em ;
+}
+
+#size-group {
+    margin-left: 1em ;
+}
+
+// remove browser styling (source: https://stackoverflow.com/a/22306944)
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+
+.justify-content-center {
+    justify-content: center;
+}

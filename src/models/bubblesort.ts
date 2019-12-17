@@ -7,7 +7,7 @@ export class BubbleSort extends Algorithm {
     }
 
     sort(data: number[]): number[][] {
-        const steps: number[][] = [];
+        const steps: number[][] = [_.clone(data)];
 
         for (let n = data.length; n > 1; --n) {
             for (let i = 0; i < n - 1; ++i) {

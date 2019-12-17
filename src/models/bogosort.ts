@@ -9,7 +9,7 @@ export class Bogosort extends Algorithm{
     }
 
     sort(data: number[]): number[][]{
-        const steps: number[][] = [];
+        const steps: number[][] = [_.clone(data)];
         let counter = 0;
 
         while (!Bogosort.isSorted(data) && counter < Bogosort.MAX_ITERATIONS) {

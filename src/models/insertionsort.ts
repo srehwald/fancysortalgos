@@ -7,7 +7,7 @@ export class InsertionSort extends Algorithm{
     }
 
     sort(data: number[]): number[][] {
-        const steps: number[][] = [];
+        const steps: number[][] = [_.clone(data)];
 
         for (let i = 0; i < data.length; i++) {
             if (i > 0) {

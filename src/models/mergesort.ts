@@ -8,7 +8,7 @@ export class MergeSort extends Algorithm{
 
     sort(data: number[]): number[][] {
         let items = data.map((d, i) => new Item(d, i));
-        const steps: number[][] = [];
+        const steps: number[][] = [_.clone(data)];
 
         this.mergeSort(items, data, steps);
         return steps;
@@ -16,7 +16,7 @@ export class MergeSort extends Algorithm{
 
     // https://hackernoon.com/programming-with-js-merge-sort-deb677b777c0
     mergeSort(items: Item[], original: number[], steps: number[][]): Item[] {
-        if (items.length === 1) {
+        if (items.length <= 1) {
             return items;
         }
 

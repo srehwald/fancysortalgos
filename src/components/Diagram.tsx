@@ -1,9 +1,9 @@
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import { Chart } from "chart.js";
 import * as _ from "lodash";
 import { Algorithm, BubbleSort, MergeSort, Bogosort, InsertionSort, Util } from "../models";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCogs, faRandom, faStop, faStepBackward, faStepForward, faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
+import { faCogs, faRandom, faStop, faStepBackward, faStepForward, faPlay, faPause, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 interface IDiagramProps {
     size: number;
@@ -21,6 +21,9 @@ interface IDiagramState {
 }
 
 export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
+    private static readonly SIZE_MIN = 0;
+    private static readonly SIZE_MAX = 100;
+
     private _chartRef: any = React.createRef();
     private _algorithms: Algorithm[];
 
@@ -90,6 +93,28 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
             this.state.chart!.update();
         });
 
+    }
+
+    changeSizeEvent(event: SyntheticEvent ) {
+        // get input value
+        const target = event.target as HTMLInputElement;
+        const size = parseInt(target.value);
+
+        this.changeSize(size);
+    }
+
+    changeSize(size: number) {
+        let data: number[] = [];
+        if (!isNaN(size)) {
+            if (size > Diagram.SIZE_MAX) {
+                size = 100;
+            } else if (size < Diagram.SIZE_MIN) {
+                size = 1;
+            }
+            data = _.range(1, size + 1);
+        }
+
+        this.setState({data: data}, () => this.shuffle());
     }
 
     selectAlgorithm(event: any) {
@@ -175,6 +200,10 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
     }
 
     handleKeys(event: any) {
+        if (event.target !== document.body) {
+            return;
+        }
+
         if (this.state.isPaused || this.state.isStopped) {
             if (event.keyCode === 37) {
                 // [arrowleft]
@@ -209,65 +238,90 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
         return (
             <div>
                 <canvas id="chart" ref={this._chartRef} />
-                <div className="field has-addons has-addons-centered">
-                    <div className="control has-icons-left">
-                        <div className="select">
-                            <select onChange={event => this.selectAlgorithm(event)}>
-                                {/* the value property of each option is set to the index of the algorithm in the array */}
-                                {this._algorithms.map((val: Algorithm, index: number) =>
-                                    <option key={index} value={index}>{val.name}</option>)}
-                            </select>
-                            <span className="icon is-left">
-                                <FontAwesomeIcon icon={faCogs} />
-                            </span>
+                <div className="field is-horizontal justify-content-center">
+                    <div id="playback-group" className="field has-addons has-addons-centered">
+                        <div className="control has-icons-left">
+                            <div className="select">
+                                <select onChange={event => this.selectAlgorithm(event)}>
+                                    {/* the value property of each option is set to the index of the algorithm in the array */}
+                                    {this._algorithms.map((val: Algorithm, index: number) =>
+                                        <option key={index} value={index}>{val.name}</option>)}
+                                </select>
+                                <span className="icon is-left">
+                                    <FontAwesomeIcon icon={faCogs} />
+                                </span>
+                            </div>
+                        </div>
+                        <div className="control">
+                            {(() => {
+                                if (this.state.isPaused || this.state.isStopped) {
+                                    return (
+                                        <button className="button is-success" onClick={() => this.continueSort()}
+                                            disabled={this.state.index >= this.state.steps.length - 1}>
+                                            <FontAwesomeIcon icon={faPlay} />
+                                        </button>
+                                    );
+                                } else {
+                                    return (
+                                        <button className="button is-warning" onClick={() => this.pauseSort()}>
+                                            <FontAwesomeIcon icon={faPause} />
+                                        </button>
+                                    );
+                                }
+                            })()}
+                        </div>
+                        <div className="control">
+                            {(() =>{
+                                if (this.state.isStopped) {
+                                    return (
+                                        <button className="button is-info" onClick={() => this.shuffle()}>
+                                            <FontAwesomeIcon icon={faRandom} />
+                                        </button>
+                                    );
+                                } else {
+                                    return (
+                                        <button className="button is-danger" onClick={() => this.stopSort()}>
+                                            <FontAwesomeIcon icon={faStop} />
+                                        </button>
+                                    );
+                                }
+                            })()}
+                        </div>
+                        <div className="control">
+                            <button className="button is-link" onClick={() => this.prevStep()}
+                                disabled={!(this.state.isPaused || this.state.isStopped)}>
+                                <FontAwesomeIcon icon={faStepBackward} />
+                            </button>
+                        </div>
+                        <div className="control">
+                            <button className="button is-link" onClick={() => this.nextStep()}
+                                disabled={!(this.state.isPaused || this.state.isStopped)}>
+                                <FontAwesomeIcon icon={faStepForward} />
+                            </button>
                         </div>
                     </div>
-                    <div className="control">
-                        {(() => {
-                            if (this.state.isPaused || this.state.isStopped) {
-                                return (
-                                    <button className="button is-success" onClick={() => this.continueSort()}
-                                        disabled={this.state.index >= this.state.steps.length - 1}>
-                                        <FontAwesomeIcon icon={faPlay} />
-                                    </button>
-                                );
-                            } else {
-                                return (
-                                    <button className="button is-warning" onClick={() => this.pauseSort()}>
-                                        <FontAwesomeIcon icon={faPause} />
-                                    </button>
-                                );
-                            }
-                        })()}
-                    </div>
-                    <div className="control">
-                        {(() =>{
-                            if (this.state.isStopped) {
-                                return (
-                                    <button className="button is-info" onClick={() => this.shuffle()}>
-                                        <FontAwesomeIcon icon={faRandom} />
-                                    </button>
-                                );
-                            } else {
-                                return (
-                                    <button className="button is-danger" onClick={() => this.stopSort()}>
-                                        <FontAwesomeIcon icon={faStop} />
-                                    </button>
-                                );
-                            }
-                        })()}
-                    </div>
-                    <div className="control">
-                        <button className="button is-link" onClick={() => this.prevStep()}
-                            disabled={!(this.state.isPaused || this.state.isStopped)}>
-                            <FontAwesomeIcon icon={faStepBackward} />
-                        </button>
-                    </div>
-                    <div className="control">
-                        <button className="button is-link" onClick={() => this.nextStep()}
-                            disabled={!(this.state.isPaused || this.state.isStopped)}>
-                            <FontAwesomeIcon icon={faStepForward} />
-                        </button>
+                    <div id="size-group" className="field has-addons has-addons-centered">
+                        <div className="control">
+                            <button className="button"
+                                disabled={this.state.data.length === Diagram.SIZE_MIN}
+                                onClick={() => this.changeSize(this.state.data.length - 1)}>
+                                <FontAwesomeIcon icon={faChevronLeft} />
+                            </button>
+                        </div>
+                        <div className="control">
+                            <input className="input has-text-centered" type="number"
+                                min={Diagram.SIZE_MIN} max={Diagram.SIZE_MAX}
+                                onChange={e => this.changeSizeEvent(e)} 
+                                disabled={!(this.state.isPaused || this.state.isStopped)}
+                                value={this.state.data.length > 0 ?this.state.data.length : ""}/>
+                        </div>
+                        <div className="control">
+                            <button className="button"
+                                disabled={this.state.data.length === Diagram.SIZE_MAX}
+                                onClick={() => this.changeSize(this.state.data.length + 1)}>
+                                <FontAwesomeIcon icon={faChevronRight} />
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div className="is-size-7 has-text-grey">
