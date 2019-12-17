@@ -211,6 +211,12 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
             } else if (event.keyCode === 39) {
                 // [arrowright]
                 this.nextStep();
+            } else if (event.keyCode === 38 && this.state.data.length < Diagram.SIZE_MAX) {
+                // [arrowup]
+                this.changeSize(this.state.data.length + 1);
+            } else if (event.keyCode === 40 && this.state.data.length > Diagram.SIZE_MIN) {
+                // [arrowdown]
+                this.changeSize(this.state.data.length - 1);
             } else if (event.keyCode === 32) {
                 // [spacebar]
                 event.preventDefault(); // prevent scroll
@@ -325,7 +331,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                     </div>
                 </div>
                 <div className="is-size-7 has-text-grey">
-                    Hint: You can use your arrow keys to step forward/backwards, your spacebar for play/pause and backspace for stop/shuffle.
+                    Hint: You can use your right/left arrow keys to step forward/backwards, your spacebar for play/pause, backspace for stop/shuffle and your up/down arrow keys for increasing/decreasing the diagram size.
                 </div>
                 {/* TODO hint for using arrow keys */}
             </div>
