@@ -90,8 +90,10 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
         if (document.cookie.indexOf("size=") >= 0) {
             // inspired by https://plainjs.com/javascript/utilities/set-cookie-get-cookie-and-delete-cookie-5/
             const match = document.cookie.match("(^|;) ?size=([^;]*)(;|$)");
+            // if match found parse size, else set to max
             const size = match ? parseInt(match[2]) : Diagram.SIZE_MAX;
 
+            // check if size is number and in valid range
             if (!isNaN(size) && size >= Diagram.SIZE_MIN && size <= Diagram.SIZE_MAX) {
                 return size;
             }
