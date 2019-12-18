@@ -237,9 +237,11 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                 this.nextStep();
             } else if (event.keyCode === 38 && this.state.data.length < Diagram.SIZE_MAX) {
                 // [arrowup]
+                event.preventDefault(); // prevent scroll
                 this.changeSize(this.state.data.length + 1);
             } else if (event.keyCode === 40 && this.state.data.length > Diagram.SIZE_MIN) {
                 // [arrowdown]
+                event.preventDefault(); // prevent scroll
                 this.changeSize(this.state.data.length - 1);
             } else if (event.keyCode === 32) {
                 // [spacebar]
