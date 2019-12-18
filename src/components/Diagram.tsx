@@ -1,6 +1,7 @@
 import React, { SyntheticEvent } from "react";
 import { Chart } from "chart.js";
 import * as _ from "lodash";
+import moment from "moment";
 import { Algorithm, BubbleSort, MergeSort, Bogosort, InsertionSort, Util } from "../models";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCogs, faRandom, faStop, faStepBackward, faStepForward, faPlay, faPause, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
@@ -31,8 +32,9 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
         super(props);
         this._algorithms = [new MergeSort(), new BubbleSort(), new InsertionSort(), new Bogosort()];
 
+        const size = this.getSizeCookie();
         // TODO shuffle again if already ordered
-        const data = _.shuffle(_.range(1, this.props.size + 1));
+        const data = _.shuffle(_.range(1, size + 1));
         const algorithm = this._algorithms[0];
         const steps = algorithm.sort(_.clone(data));
 
@@ -84,6 +86,25 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
         document.removeEventListener("keydown", event => this.handleKeys(event));
       }
 
+    getSizeCookie(): number {
+        if (document.cookie.indexOf("size=") >= 0) {
+            // inspired by https://plainjs.com/javascript/utilities/set-cookie-get-cookie-and-delete-cookie-5/
+            const match = document.cookie.match("(^|;) ?size=([^;]*)(;|$)");
+            const size = match ? parseInt(match[2]) : Diagram.SIZE_MAX;
+
+            if (!isNaN(size) && size >= Diagram.SIZE_MIN && size <= Diagram.SIZE_MAX) {
+                return size;
+            }
+        }
+
+        return Diagram.SIZE_MAX;
+    }
+
+    setSizeCookie(size: number) {
+        document.cookie = `size=${size};path=/;expires=${moment().add(100, 'days').format('YYYY-MM-DD HH:mm ZZ')}`
+    }
+
+
     shuffle() {
         this.setState({data: _.shuffle(this.state.data)}, () => {
             this.startSort();
@@ -112,6 +133,7 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
                 size = 1;
             }
             data = _.range(1, size + 1);
+            this.setSizeCookie(data.length);
         }
 
         this.setState({data: data}, () => this.shuffle());
