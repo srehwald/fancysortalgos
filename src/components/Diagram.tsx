@@ -82,9 +82,9 @@ export class Diagram extends React.Component<IDiagramProps, IDiagramState> {
         this.setState({chart: chart});
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         document.removeEventListener("keydown", event => this.handleKeys(event));
-      }
+    }
 
     getSizeCookie(): number {
         if (document.cookie.indexOf("size=") >= 0) {
