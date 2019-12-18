@@ -1,11 +1,11 @@
 {
   "files": {
     "main.css": "/fancysortalgos/static/css/main.58f61650.chunk.css",
-    "main.js": "/fancysortalgos/static/js/main.eb189a94.chunk.js",
+    "main.js": "/fancysortalgos/static/js/main.7ebe7400.chunk.js",
     "runtime~main.js": "/fancysortalgos/static/js/runtime~main.685ab1e9.js",
     "static/js/2.9cae4233.chunk.js": "/fancysortalgos/static/js/2.9cae4233.chunk.js",
     "index.html": "/fancysortalgos/index.html",
-    "precache-manifest.bba2863c6e0caac14daada897c317ee9.js": "/fancysortalgos/precache-manifest.bba2863c6e0caac14daada897c317ee9.js",
+    "precache-manifest.8ea36fe5cdf043ba5e556bd05372357f.js": "/fancysortalgos/precache-manifest.8ea36fe5cdf043ba5e556bd05372357f.js",
     "service-worker.js": "/fancysortalgos/service-worker.js"
   }
 }

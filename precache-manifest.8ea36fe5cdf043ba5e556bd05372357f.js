@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "1e9e5b4fe28f3a1643c63d914fc5a113",
+    "revision": "d417048515374b6df8dd3aaecb95acf9",
     "url": "/fancysortalgos/index.html"
   },
   {
-    "revision": "ebc996e33f9bf95902f0",
+    "revision": "326f57d7137529af4abf",
     "url": "/fancysortalgos/static/css/main.58f61650.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/fancysortalgos/static/js/2.9cae4233.chunk.js"
   },
   {
-    "revision": "ebc996e33f9bf95902f0",
-    "url": "/fancysortalgos/static/js/main.eb189a94.chunk.js"
+    "revision": "326f57d7137529af4abf",
+    "url": "/fancysortalgos/static/js/main.7ebe7400.chunk.js"
   },
   {
     "revision": "a3324e50739f2ed6ad23",
